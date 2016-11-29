@@ -1,7 +1,7 @@
 # Net
 This is an Artificial Neural Network implemented on c++ using Object Oriented Design pattern.
-The library allow us to use just a perceptron or create a complete multilayer network.
-The activation function for a perceptron by default is the Sigmoid function (feel free to implement yours).
+The library allow us to use just a perceptron or a complete multilayer network.
+The activation function for the perceptrons is the Sigmoid function by default (feel free to implement yours).
 
 ##### Some of the technologies used in this project are:
   - C++
