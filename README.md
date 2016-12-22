@@ -1,5 +1,5 @@
 # Net
-This is an Artificial Neural Network implemented on c++ using Object Oriented Design pattern.
+This is an Artificial Neural Network implemented on C++ using Object Oriented Programming.
 The library allow us to use just a perceptron or a complete multilayer network.
 The activation function for the perceptrons is the Sigmoid function by default (feel free to implement yours).
 
