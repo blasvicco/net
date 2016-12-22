@@ -16,6 +16,7 @@ In the code where you want to use it you need to include the Net header file.
 
 ```c++
 #include “net.h”
+#include "activation.h"
 ```
 
 Then you can instantiate and initialize a network.
@@ -27,7 +28,7 @@ void yourFunction(type someParameter) {
 	int ni = 2; //number of inputs
 	int no = 2; //number of outputs
 	float mu = 0.6; //learning factor
-	net.ini(ni, no, numberOfPerceptronPerLayer, mu);
+	net.ini(ni, no, numberOfPerceptronPerLayer, TANH,mu);
 
 	vector<float> inputs = {-1, -1}; //the input values
 	net.setInputs(inputs); //to set the inputs to the net
