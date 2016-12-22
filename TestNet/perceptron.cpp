@@ -7,56 +7,58 @@
 
 #include "perceptron.h"
 
-classPerceptron::classPerceptron(int nip, float initialMu) {
+classPerceptron::classPerceptron(unsigned int nip, unsigned int type, double initialMu) {
+    activationType = type;
     mu = initialMu > 0 ? initialMu : mu;
     ponderation.clear();
-    inputs.clear();
+    input.clear();
     output = 0;
     ni = nip;
-    float tmp;
-    float signe;
-    for (int i = 0; i <= ni; i++) {
+    double tmp;
+    for (unsigned int i = 0; i < ni; i++) {
         tmp = 0;
-        signe = rand() % 2 == 1 ? -1.0 : 1.0;
-        tmp = ((rand() % 100)/100.0) * signe;
+        tmp = ((rand() % 100)/100.0) * (rand() % 2 == 1 ? -1.0 : 1.0);
         ponderation.push_back(tmp);
     }
+    ponderation.push_back(rand() % 2 == 1 ? -1.0 : 1.0); //adding bias
 }
 
 classPerceptron::~classPerceptron() {
     //liberar memoria
 }
 
-int classPerceptron::setInputs(vector<float> input) {
-    inputs.clear();
-    inputs = input;
-    return 1;
+void classPerceptron::setInput(vector<double> inp) {
+    input.clear();
+    input = inp;
 }
 
-float classPerceptron::getOutput() {
-    float sum = 0;
-    for (int i = 0; i < ni; i++) {
-        sum += inputs[i] * ponderation[i];
+double classPerceptron::getOutput() {
+    double sum = 0;
+    for (unsigned int i = 0; i < ni; i++) {
+        sum += input[i] * ponderation[i];
     }
     
-    sum += ponderation[ni]; //+ via
-    output = (2.0 / (1.0 + exp(-sum))) - 1.0; //sigmoide
+    sum += ponderation[ni]; //+ bias
+    output = Activation::f(activationType, sum);
     return output;
 }
 
-void classPerceptron::setError(float error) {
-    dEtotaldOutput = error;
+void classPerceptron::setError(double error) {
+    dEtotaldOutput = Activation::fprime(activationType, output) * error;
 }
 
-vector<float> classPerceptron::fix(vector<float> inputs) {
-    float delta = dEtotaldOutput;
-    vector<float> deltaBackErrors;
-    for (int i = 0; i <= ni; i++) {
-        deltaBackErrors.push_back(delta * ponderation[i]);
-        float tmp = mu * delta * inputs[i];
-        if ((ponderation[i] + tmp > -FLT_MAX) && (ponderation[i] + tmp < FLT_MAX)) {
+vector<double> classPerceptron::backFix(vector<double> inp) {
+    double delta = dEtotaldOutput;
+    vector<double> deltaBackErrors;
+    for (unsigned int i = 0; i < ni; i++) {
+        double tmp = mu * delta * inp[i];
+        if ((ponderation[i] + tmp > -DBL_MAX) && (ponderation[i] + tmp < DBL_MAX)) {
             ponderation[i] += tmp;
         }
+        deltaBackErrors.push_back(delta * ponderation[i]);
     }
+    ponderation[ni] += mu * delta;
     return deltaBackErrors;
 }
+
+

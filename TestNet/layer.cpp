@@ -7,14 +7,14 @@
 
 #include "layer.h"
 
-classLayer::classLayer(int nip, int nperce, float initialMu) {
-    inputs.clear();
-    outputs.clear();
+classLayer::classLayer(unsigned int nip, unsigned int nperce, unsigned int type, double initialMu) {
+    input.clear();
+    output.clear();
     np = nperce;
     ni = nip;
     Perceptron.clear();
-    for (int i = 0; i < np; i++) {
-        classPerceptron *tmp = new classPerceptron(nip, initialMu);
+    for (unsigned int i = 0; i < np; i++) {
+        classPerceptron *tmp = new classPerceptron(nip, type, initialMu);
         Perceptron.push_back(*tmp);
     }
 }
@@ -23,36 +23,42 @@ classLayer::~classLayer() {
     //liberar memoria
 }
 
-void classLayer::setInputs(vector<float> input) {
-    inputs.clear();
-    inputs = input;
+void classLayer::setInput(vector<double> inp) {
+    input.clear();
+    input = inp;
 }
 
-vector<float> classLayer::getOutput() {
-    outputs.clear();
-    float tmp = 0;
-    for (int i = 0; i < np; i++) {
-        Perceptron[i].setInputs(inputs);
-        tmp = Perceptron[i].getOutput();
-        outputs.push_back(tmp);
-    }
-    return outputs;
+vector<double> classLayer::getOutput() {
+    output = feedForward(input);
+    return output;
 }
 
-void classLayer::setError(vector<float> error) {
-    for (int i = 0; i < np; i++) {
+void classLayer::setError(vector<double> error) {
+    for (unsigned int i = 0; i < np; i++) {
         Perceptron[i].setError(error[i]);
     }
 }
 
-vector<float> classLayer::fix() {
-    vector<float> deltaBackErrors;
-    vector<float> deltaBackErrorsTotal(ni, 0.0);
-    for (int i = 0; i < np; i++) {
-        deltaBackErrors = Perceptron[i].fix(inputs);
-        for (int j = 0; j < ni; j++) {
+vector<double> classLayer::backFix() {
+    vector<double> deltaBackErrors;
+    vector<double> deltaBackErrorsTotal(ni, 0.0);
+    for (unsigned int i = 0; i < np; i++) {
+        deltaBackErrors = Perceptron[i].backFix(input);
+        for (unsigned int j = 0; j < ni; j++) {
             deltaBackErrorsTotal[j] += deltaBackErrors[j];
         }
     }
     return deltaBackErrorsTotal;
+}
+
+//Private
+vector<double> classLayer::feedForward(vector<double> input) {
+    vector<double> output;
+    double tmp = 0;
+    for (unsigned int i = 0; i < np; i++) {
+        Perceptron[i].setInput(input);
+        tmp = Perceptron[i].getOutput();
+        output.push_back(tmp);
+    }
+    return output;
 }
