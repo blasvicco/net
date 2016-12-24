@@ -14,11 +14,15 @@ class classLayer {
 private:
     vector <classPerceptron> Perceptron;
     vector <double> input;
+    vector <double> vbias; //restricted boltzman machine visible bias
     vector <double> output;
     vector <double> delta;
     unsigned int np;
     unsigned int ni;
+    double mu = 0.6;
     vector<double> feedForward(vector<double> input);
+    vector<double> feedBackware(vector<double> input);
+    vector<double> binomial(vector<double> input);
     
 public:
     classLayer(unsigned int nip, unsigned int nperce, unsigned int type, double initialMu);
@@ -27,6 +31,7 @@ public:
     vector<double> getOutput();
     void setError(vector<double> error);
     vector<double> backFix();
+    void temper(unsigned int k);
 };
 
 #endif /* layer_h */
