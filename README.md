@@ -36,7 +36,7 @@ void yourFunction(type someParameter) {
 	//for the back propagation we need to define the error
 	vector<float> wished = {1, 1}; //expected outputs
 	vector<float> errors = {wished[0] - output[0], wished[1] - output[1]}; //errors
-	net.fix(errors); //back propagation - learning!!!
+	net.backFix(errors); //back propagation - learning!!!
 }
 ```
 
