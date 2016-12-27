@@ -8,6 +8,7 @@
 #include "layer.h"
 
 classLayer::classLayer(unsigned int nip, unsigned int nperce, unsigned int type, double initialMu) {
+    activationType = type;
     input.clear();
     output.clear();
     np = nperce;
@@ -60,27 +61,23 @@ void classLayer::temper(unsigned int k) {
     vector<double> pOSample = binomial(pOMean);
     //first gibbs
     vector<double> nIMean = feedBackware(pOSample);
-    vector<double> nISample = binomial(nIMean);
-    vector<double> nOMean = feedForward(nISample);
+    vector<double> nOMean = feedForward(nIMean);
     vector<double> nOSample = binomial(nOMean);
     for (unsigned int i = 1; i < k; i++) {
         //gibbs
-        vector<double> nIMean = feedBackware(nOSample);
-        vector<double> nISample = binomial(nIMean);
-        vector<double> nOMean = feedForward(nISample);
-        vector<double> nOSample = binomial(nOMean);
+        nIMean = feedBackware(nOSample);
+        nOMean = feedForward(nIMean);
+        nOSample = binomial(nOMean);
     }
-    
     for (unsigned int i = 0; i < np; i++) {
         for (unsigned int j = 0; j < ni; j++) {
-            double lError = pOMean[i] * input[j] - nOMean[i] * nISample[j];
-            Perceptron[i].forFix((lError) / ni, j);
+            double lError = (pOMean[i] * input[j] - nOMean[i] * nIMean[j]) / ni;
+            Perceptron[i].forFix(lError, j);
         }
-        Perceptron[i].forBiasFix((pOSample[i] - nOMean[i]) / ni);
+        Perceptron[i].forBiasFix((pOSample[i] - nOMean[i])/ni);
     }
-    
     for (unsigned int i = 0; i < ni; i++) {
-        vbias[i] += mu * (input[i] - nISample[i]) / ni;
+        vbias[i] += mu * (input[i] - nIMean[i])/ni;
     }
 }
 
@@ -103,8 +100,8 @@ vector<double> classLayer::feedBackware(vector<double> input) {
         for (unsigned int j = 0; j< np; j++) {
             sum += Perceptron[j].feedBackware(input[i], i);
         }
-        //should we change this if it is a TANH activation function???
-        tmp.push_back(Activation::f(SIGMOID, sum));
+        sum += vbias[i];
+        tmp.push_back(Activation::f(activationType, sum));
     }
     return tmp;
 }
@@ -112,8 +109,8 @@ vector<double> classLayer::feedBackware(vector<double> input) {
 vector<double> classLayer::binomial(vector<double> input) {
     vector<double> tmp;
     for (unsigned int i = 0; i < input.size(); i++) {
-        //should we change this if it is a TANH activation function???
-        tmp.push_back((Random::dur01() > input[i]) ? 1.0 : 0.0);
+        double r = Random::dur01() * (activationType == TANH ? Random::sign() : 1.0);
+        tmp.push_back((r < input[i]) ? 1.0 : 0.0);
     }
     return tmp;
 }

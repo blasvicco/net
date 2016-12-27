@@ -13,6 +13,7 @@
 class classLayer {
 private:
     vector <classPerceptron> Perceptron;
+    unsigned int activationType;
     vector <double> input;
     vector <double> vbias; //restricted boltzman machine visible bias
     vector <double> output;
