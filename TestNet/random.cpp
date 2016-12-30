@@ -28,9 +28,13 @@ int Random::onoff() {
 
 double Random::dur01() {
     const unsigned int rangeFrom = 0;
-    const unsigned int rangeTo = 10000;
+    const unsigned int rangeTo = 1;
     std::random_device                  rand_dev;
     std::mt19937                        generator(rand_dev());
-    std::uniform_int_distribution<int>  distr(rangeFrom, rangeTo);
-    return (double)distr(generator)/(double)rangeTo;
+    std::uniform_real_distribution<double>  distr(rangeFrom, rangeTo);
+    return distr(generator);
+}
+
+int Random::rndRange(int from, int to) {
+    return (int)((double)(rand()/(double)RAND_MAX) * to) + from;
 }

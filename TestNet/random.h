@@ -9,6 +9,7 @@
 #ifndef random_hpp
 #define random_hpp
 
+#include <time.h>
 #include <random>
 
 class Random {
@@ -16,6 +17,7 @@ public:
     static int sign();
     static int onoff();
     static double dur01();
+    static int rndRange(int from, int to);
 };
 
 #endif /* random_hpp */
