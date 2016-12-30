@@ -41,6 +41,26 @@ void classNet::ini(unsigned int ninput, unsigned int noutput, vector <unsigned i
     nl = (unsigned int)Layer.size();
 }
 
+void classNet::clone(classNet Net, double mRate) {
+    Layer = Net.getLayer();
+    nl = (unsigned int)Layer.size();
+    ni = Net.getNi();
+    no = Net.getNo();
+    mutate(getGens(), mRate);
+}
+
+vector <classLayer> classNet::getLayer() {
+    return Layer;
+}
+
+unsigned int classNet::getNi() {
+    return ni;
+}
+
+unsigned int classNet::getNo() {
+    return no;
+}
+
 void classNet::setInput(vector<double> inp) {
     input = inp;
 }
@@ -68,6 +88,52 @@ void classNet::temper(unsigned int deep, unsigned int k) {
 }
 
 //Private
+vector<double> classNet::getGens() {
+    vector<double> gens = {};
+    for (unsigned int i = 0; i < nl; i++) {
+        vector<classPerceptron> perceptrons = Layer[i].getPerceptron();
+        for (unsigned int j = 0; j < perceptrons.size(); j++) {
+            vector<double> tmp = perceptrons[j].getPonderations();
+            gens.insert(gens.end(), tmp.begin(), tmp.end());
+        }
+    }
+    return gens;
+}
+
+void classNet::setGens(vector<double> gens) {
+    unsigned int index = 0;
+    for (unsigned int i = 0; i < nl; i++) {
+        vector<classPerceptron> perceptrons = Layer[i].getPerceptron();
+        for (unsigned int j = 0; j < perceptrons.size(); j++) {
+            vector<double> ponderations = perceptrons[j].getPonderations();
+            for (unsigned int k = 0; k < ponderations.size(); k++) {
+                ponderations[k] = gens[index];
+                index++;
+            }
+            perceptrons[j].setPonderations(ponderations);
+        }
+    }
+}
+
+void classNet::mutate(vector<double> gens, double mRate) {
+    vector<unsigned int> tmp;
+    unsigned int nGensToMutate = (unsigned int) (gens.size() * mRate);
+    unsigned int index = 0;
+    while (nGensToMutate > 0) {
+        if (mRate != 1.0) {
+            index = Random::rndRange(0, (int)gens.size() - 1);
+            while (find(tmp.begin(), tmp.end(), index) != tmp.end()) {
+                index = Random::rndRange(0, (int)gens.size() - 1);
+            }
+            tmp.push_back(index);
+        }
+        gens[index] = ((Random::dur01()/2.0) + 0.5) * (double)Random::sign(); //mutation
+        nGensToMutate--;
+        index++;
+    };
+    setGens(gens);
+}
+
 void classNet::feedForward(unsigned int deep) {
     output = input;
     for (unsigned int i = 0; i < deep; i++) {

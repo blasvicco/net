@@ -31,6 +31,8 @@ private:
 public:
     classPerceptron(unsigned int nip, unsigned int type, double initialMu);
     ~classPerceptron();
+    vector<double> getPonderations();
+    void setPonderations(vector<double> ponderations);
     void setInput(vector <double> inp);
     double getOutput();
     void setError(double error);

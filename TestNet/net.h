@@ -19,12 +19,19 @@ private:
     unsigned int no;//numero de salidas
     unsigned int nl;//numero de capas
     vector <unsigned int> nppl;//numero de perceptrones por capa
+    vector<double> getGens();
+    void setGens(vector<double> gens);
+    void mutate(vector<double> gens, double mRate);
     void feedForward(unsigned int deep);
     
 public:
     classNet();
     ~classNet();
     void ini(unsigned int ninput, unsigned int noutput, vector <unsigned int> numppl, unsigned int type, double initialMu);
+    void clone(classNet Net, double mRate);
+    vector <classLayer> getLayer();
+    unsigned int getNi();
+    unsigned int getNo();
     void setInput(vector <double> inp);
     vector <double> getOutput();
     void backFix(vector <double> error);

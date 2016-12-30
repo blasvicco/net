@@ -28,6 +28,7 @@ private:
 public:
     classLayer(unsigned int nip, unsigned int nperce, unsigned int type, double initialMu);
     ~classLayer();
+    vector<classPerceptron> getPerceptron();
     void setInput(vector <double> inp);
     vector<double> getOutput();
     void setError(vector<double> error);

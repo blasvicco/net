@@ -27,6 +27,14 @@ classPerceptron::~classPerceptron() {
     //liberar memoria
 }
 
+vector<double> classPerceptron::getPonderations() {
+    return ponderation;
+}
+
+void classPerceptron::setPonderations(vector<double> ponderations) {
+    ponderation = ponderations;
+}
+
 void classPerceptron::setInput(vector<double> inp) {
     input.clear();
     input = inp;

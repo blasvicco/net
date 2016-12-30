@@ -28,6 +28,10 @@ classLayer::~classLayer() {
     //liberar memoria
 }
 
+vector<classPerceptron> classLayer::getPerceptron() {
+    return Perceptron;
+}
+
 void classLayer::setInput(vector<double> inp) {
     input.clear();
     input = inp;
