@@ -55,10 +55,10 @@ LEARNINGRATE is the gradient damping for the learning process. At the moment, th
 
 Inside the main function we define the numEpoch, for this example we set it on 50 iterations.
 For each epoch we will:
--.Initialize a network
--.Pre training
--.Training
--.Test
+* -.Initialize a network
+* -.Pre training
+* -.Training
+* -.Test
 
 By default we will print in each epoch, the number of iteration needed for the Net to get trained and the total of fails in the test phase.
 At the end of the epoches iteration we will print the average of iteration and the average of percentual errors.
