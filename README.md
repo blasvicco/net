@@ -78,10 +78,12 @@ vector<unsigned int> nppl = {3};
 net.ini(2, 1, nppl, TYPE, LEARNINGRATE);
 ```
 Response example:
+```
 ----------------------------------------
 Min error reached at iteration avg: 13633
 Average error: 1.566%
 ----------------------------------------
+```
 
 But in order to test the RBM we will add an extra hidden layer to the Net. You can see that if we add this extra layer, incress the learning rate to 0.8 and we do not activate the pre training, the response of the Net to solve the XOR problem is not good at all.
 
@@ -95,10 +97,12 @@ net.ini(2, 1, nppl, TYPE, LEARNINGRATE);
 ```
 
 Response example without pre training:
+```
 ----------------------------------------
 Min error reached at iteration avg: 7689
 Average error: 29.176%
 ----------------------------------------
+```
 
 Versus:
 
@@ -112,10 +116,12 @@ net.ini(2, 1, nppl, TYPE, LEARNINGRATE);
 ```
 
 Response example with pre training:
+```
 ----------------------------------------
 Min error reached at iteration avg: 5494
 Average error: 10.988%
 ----------------------------------------
+```
 
 As you can see in the code, the pre training is a loop of 1000 samples. Also, we are applying the RBM just to the first hidden layer and we are setting just one Gibbs steps. Please feel free to play with this parameters.
 
