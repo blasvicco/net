@@ -38,6 +38,8 @@ void yourFunction(type someParameter) {
 
 ### XOR example
 
+Check the video: https://youtu.be/HAOM5PUad18
+
 The main.cpp file implements a complete well known XOR example.
 You will see first on the code the definition of 4 important constants.
 
