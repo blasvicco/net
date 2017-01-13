@@ -52,7 +52,7 @@ const double LEARNINGRATE = 0.8;
 
 TYPE is the activation function that we will use for the perceptron on the Net. You can chose between SIGMOID and TANH.
 RBMPRETRAINING is a boolean value that activate or deactivate the pretraining using RBM.
-MINERRORACCEPTED is a double value used to stop the training process when the Global Error reach the threshold. Remember that higher values will result in less training iterations but maybe It will no be enough to find a good solution. Smaller values will incress the number of iteration significantly.
+MINERRORACCEPTED is a double value used to stop the training process when the Global Error reach the threshold. Remember that higher values will result in less training iterations but maybe It will no be enough to find a good solution. Smaller values will increment the number of iteration significantly.
 LEARNINGRATE is the gradient damping for the learning process. At the moment, the value apply for both, the pretraining and the backpropagation.
 
 Inside the main function we define the numEpoch, for this example we set it on 50 iterations.
@@ -63,7 +63,7 @@ For each epoch we will:
 * Test
 
 By default we will print in each epoch, the number of iteration needed for the Net to get trained and the total of fails in the test phase.
-At the end of the epoches iteration we will print the average of iteration and the average of percentual errors.
+At the end of the epochs iteration we will print the average of iteration and the average of percentual errors.
 In this way we will have a better approach of the Network configuration response.
 
 For the XOR problem we will have two inputs and one output. These values will be different depending of the activation function we chose for the Net.
@@ -76,7 +76,7 @@ const bool RBMPRETRAINING = false;
 const double LEARNINGRATE = 0.3;
 vector<unsigned int> nppl = {3};
 //NETWORK SETTING
-//INPUT, OUTPUT, NUMBER PERPECTRON PER LAYER, ACTIVATION FUNCTION, LEARNING RATE
+//INPUT, OUTPUT, NUMBER PERCEPTRON PER LAYER, ACTIVATION FUNCTION, LEARNING RATE
 net.ini(2, 1, nppl, TYPE, LEARNINGRATE);
 ```
 Response example:
@@ -87,14 +87,14 @@ Average error: 1.566%
 ----------------------------------------
 ```
 
-But in order to test the RBM we will add an extra hidden layer to the Net. You can see that if we add this extra layer, incress the learning rate to 0.8 and we do not activate the pre training, the response of the Net to solve the XOR problem is not good at all.
+But in order to test the RBM we will add an extra hidden layer to the Net. You can see that if we add this extra layer, increment the learning rate to 0.8 and we do not activate the pre training, the response of the Net to solve the XOR problem is not good at all.
 
 ```c++
 const bool RBMPRETRAINING = false;
 const double LEARNINGRATE = 0.8;
 vector<unsigned int> nppl = {4, 3};
 //NETWORK SETTING
-//INPUT, OUTPUT, NUMBER PERPECTRON PER LAYER, ACTIVATION FUNCTION, LEARNING RATE
+//INPUT, OUTPUT, NUMBER PERCEPTRON PER LAYER, ACTIVATION FUNCTION, LEARNING RATE
 net.ini(2, 1, nppl, TYPE, LEARNINGRATE);
 ```
 
@@ -113,7 +113,7 @@ const bool RBMPRETRAINING = true;
 const double LEARNINGRATE = 0.8;
 vector<unsigned int> nppl = {4, 3};
 //NETWORK SETTING
-//INPUT, OUTPUT, NUMBER PERPECTRON PER LAYER, ACTIVATION FUNCTION, LEARNING RATE
+//INPUT, OUTPUT, NUMBER PERCEPTRON PER LAYER, ACTIVATION FUNCTION, LEARNING RATE
 net.ini(2, 1, nppl, TYPE, LEARNINGRATE);
 ```
 
@@ -128,7 +128,7 @@ Average error: 10.988%
 As you can see in the code, the pre training is a loop of 1000 samples. Also, we are applying the RBM just to the first hidden layer and we are setting just one Gibbs steps. Please feel free to play with this parameters.
 
 ```c++
-//PRE TRAINING WITH RBM -> Restricted Boltzman Machine
+//PRE TRAINING WITH RBM -> Restricted Boltzmann Machine
 if (RBMPRETRAINING) {
 	//pre train with 1000 samples
 	for (unsigned int i = 0; i < 1000; i++) {
@@ -143,7 +143,7 @@ if (RBMPRETRAINING) {
 }
 ```
 
-After the pre training we performe the well know MLP training or backpropagation. The loop here has two conditions, a hardcoded limit in 20000 iterations or the gError (global error) being minor than the threshold.
+After the pre training we perform the well know MLP training or back-propagation. The loop here has two conditions, a hardcoded limit in 20000 iterations or the gError (global error) being minor than the threshold.
 The hardcoded limit is a safe infinite loop breaker for Net configurations that doesn't converge or doesn't reach the threshold.
 The (gError > MINERRORACCEPTED) condition is not the best to end the training loop. It could happen that the MINERRORACCEPTED is reached with no enough training iterations, resulting in a bad Net configuration. Please, feel free to implement a better approach.
 
