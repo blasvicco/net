@@ -15,7 +15,7 @@ classNet::~classNet() {
     //liberar memoria
 }
 
-void classNet::ini(unsigned int ninput, unsigned int noutput, vector <unsigned int> numppl, unsigned int type, double initialMu) {
+void classNet::ini(unsigned int ninput, unsigned int noutput, vector <unsigned int> numppl, unsigned int type, double initialMu, double initialMomentum) {
     classLayer *tmp;
     input.clear();
     output.clear();
@@ -26,16 +26,16 @@ void classNet::ini(unsigned int ninput, unsigned int noutput, vector <unsigned i
     no = noutput;
     Layer.clear();
     if (nl == 0) {
-        tmp = new classLayer(ninput, noutput, type, initialMu);
+        tmp = new classLayer(ninput, noutput, type, initialMu, initialMomentum);
         Layer.push_back(*tmp);
     } else {
-        tmp = new classLayer(ninput, nppl[0], type, initialMu);
+        tmp = new classLayer(ninput, nppl[0], type, initialMu, initialMomentum);
         Layer.push_back(*tmp);
         for (unsigned int i = 0; i < nl - 1; i++) {
-            tmp = new classLayer(nppl[i], nppl[i + 1], type, initialMu);
+            tmp = new classLayer(nppl[i], nppl[i + 1], type, initialMu, initialMomentum);
             Layer.push_back(*tmp);
         }
-        tmp = new classLayer(nppl[nl - 1], noutput, type, initialMu);
+        tmp = new classLayer(nppl[nl - 1], noutput, type, initialMu, initialMomentum);
         Layer.push_back(*tmp);
     }
     nl = (unsigned int)Layer.size();
@@ -63,6 +63,12 @@ unsigned int classNet::getNo() {
 
 void classNet::setInput(vector<double> inp) {
     input = inp;
+}
+
+void classNet::setLearningRate(double rate) {
+    for (unsigned int i = 0; i < nl; i++) {
+        Layer[i].setLearningRate(rate);
+    }
 }
 
 vector<double> classNet::getOutput() {

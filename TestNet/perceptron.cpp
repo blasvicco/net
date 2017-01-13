@@ -7,9 +7,10 @@
 
 #include "perceptron.h"
 
-classPerceptron::classPerceptron(unsigned int nip, unsigned int type, double initialMu) {
+classPerceptron::classPerceptron(unsigned int nip, unsigned int type, double initialMu, double initialMomentum) {
     activationType = type;
     mu = initialMu > 0 ? initialMu : mu;
+    momentum = initialMomentum > 0 ? initialMomentum : 0.0;
     ponderation.clear();
     input.clear();
     output = 0;
@@ -19,8 +20,12 @@ classPerceptron::classPerceptron(unsigned int nip, unsigned int type, double ini
         tmp = 0;
         tmp = ((Random::dur01()/2.0) + 0.5) * (double)Random::sign();
         ponderation.push_back(tmp);
+        lastUpdate.push_back(0.0);
+        lastForUpdate.push_back(0.0);
     }
     ponderation.push_back((double)Random::sign()); //adding bias
+    lastUpdate.push_back(0.0);
+    lastForUpdate.push_back(0.0);
 }
 
 classPerceptron::~classPerceptron() {
@@ -38,6 +43,10 @@ void classPerceptron::setPonderations(vector<double> ponderations) {
 void classPerceptron::setInput(vector<double> inp) {
     input.clear();
     input = inp;
+}
+
+void classPerceptron::setLearningRate(double rate) {
+    mu = rate;
 }
 
 double classPerceptron::getOutput() {
@@ -59,9 +68,10 @@ vector<double> classPerceptron::backFix(vector<double> inp) {
     double delta = dEtotaldOutput;
     vector<double> deltaBackErrors;
     for (unsigned int i = 0; i < ni; i++) {
-        double tmp = mu * delta * inp[i];
+        double tmp = mu * delta * inp[i] + (momentum * lastUpdate[i]);
         if ((ponderation[i] + tmp > -DBL_MAX) && (ponderation[i] + tmp < DBL_MAX)) {
             ponderation[i] += tmp;
+            lastUpdate[i] = tmp;
         }
         deltaBackErrors.push_back(delta * ponderation[i]);
     }
@@ -74,11 +84,16 @@ double classPerceptron::feedBackware(double output, unsigned int wIndex) {
 }
 
 void classPerceptron::forFix(double error, unsigned int wIndex) {
-    ponderation[wIndex] += mu * error;
+    double tmp = mu * error + (momentum * lastForUpdate[wIndex]);
+    if ((ponderation[wIndex] + tmp > -DBL_MAX) && (ponderation[wIndex] + tmp < DBL_MAX)) {
+        ponderation[wIndex] += tmp;
+        lastForUpdate[wIndex] = tmp;
+        
+    }
 }
 
 void classPerceptron::forBiasFix(double error) {
-    ponderation[ni] += mu * error;
+    forFix(error, ni);
 }
 
 

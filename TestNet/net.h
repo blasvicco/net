@@ -27,12 +27,13 @@ private:
 public:
     classNet();
     ~classNet();
-    void ini(unsigned int ninput, unsigned int noutput, vector <unsigned int> numppl, unsigned int type, double initialMu);
+    void ini(unsigned int ninput, unsigned int noutput, vector <unsigned int> numppl, unsigned int type, double initialMu, double initialMomentum);
     void clone(classNet Net, double mRate);
     vector <classLayer> getLayer();
     unsigned int getNi();
     unsigned int getNo();
     void setInput(vector <double> inp);
+    void setLearningRate(double rate);
     vector <double> getOutput();
     void backFix(vector <double> error);
     void temper(unsigned int deep, unsigned int k);

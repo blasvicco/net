@@ -7,20 +7,22 @@
 
 #include "layer.h"
 
-classLayer::classLayer(unsigned int nip, unsigned int nperce, unsigned int type, double initialMu) {
+classLayer::classLayer(unsigned int nip, unsigned int nperce, unsigned int type, double initialMu, double initialMomentum) {
     activationType = type;
     input.clear();
     output.clear();
     np = nperce;
     ni = nip;
     mu = initialMu > 0 ? initialMu : mu;
+    momentum = initialMomentum > 0 ? initialMomentum : 0.0;
     Perceptron.clear();
     for (unsigned int i = 0; i < np; i++) {
-        classPerceptron *tmp = new classPerceptron(nip, type, initialMu);
+        classPerceptron *tmp = new classPerceptron(nip, type, initialMu, initialMomentum);
         Perceptron.push_back(*tmp);
     }
     for (unsigned int i = 0; i < ni; i++) {
         vbias.push_back(Random::dur01() * (double)Random::sign());
+        vbiasLastUpdate.push_back(0.0);
     }
 }
 
@@ -35,6 +37,12 @@ vector<classPerceptron> classLayer::getPerceptron() {
 void classLayer::setInput(vector<double> inp) {
     input.clear();
     input = inp;
+}
+
+void classLayer::setLearningRate(double rate) {
+    for (unsigned int i = 0; i < np; i++) {
+        Perceptron[i].setLearningRate(rate);
+    }
 }
 
 vector<double> classLayer::getOutput() {
@@ -81,7 +89,9 @@ void classLayer::temper(unsigned int k) {
         Perceptron[i].forBiasFix((pOSample[i] - nOMean[i])/ni);
     }
     for (unsigned int i = 0; i < ni; i++) {
-        vbias[i] += mu * (input[i] - nIMean[i])/ni;
+        double tmp = (mu * (input[i] - nIMean[i])/ni) + (momentum * vbiasLastUpdate[i]);
+        vbias[i] += tmp;
+        vbiasLastUpdate[i] = tmp;
     }
 }
 

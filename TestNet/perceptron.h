@@ -23,17 +23,21 @@ private:
     unsigned int activationType;
     unsigned int ni;
     vector <double> ponderation;
+    vector <double> lastUpdate;
+    vector <double> lastForUpdate;
     vector <double> input;
     double output;
     double mu = 0.6;
+    double momentum;
     double dEtotaldOutput = 0.0;
     
 public:
-    classPerceptron(unsigned int nip, unsigned int type, double initialMu);
+    classPerceptron(unsigned int nip, unsigned int type, double initialMu, double initialMomentum);
     ~classPerceptron();
     vector<double> getPonderations();
     void setPonderations(vector<double> ponderations);
     void setInput(vector <double> inp);
+    void setLearningRate(double rate);
     double getOutput();
     void setError(double error);
     vector<double> backFix(vector<double> inp);

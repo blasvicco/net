@@ -18,8 +18,10 @@ using namespace std;
 
 const unsigned int TYPE = TANH;//SIGMOID; //TANH
 const bool RBMPRETRAINING = true; //swap from false to true to activate the pre training
-const double MINERRORACCEPTED = (TYPE == SIGMOID) ? 0.03 : 0.005;
-const double LEARNINGRATE = 0.8;
+const double MINERRORACCEPTED = (TYPE == SIGMOID) ? 0.03 : 0.003;
+const double LEARNINGRATERBM = 0.8;
+const double LEARNINGRATEMLP = 0.3;
+const double MOMENTUM = 0.2;
 
 double s() {
     return TYPE == SIGMOID ? Random::onoff() : Random::sign();
@@ -42,10 +44,10 @@ int main(int argc, const char * argv[]) {
     for (int t = 0; t < numEpoch; t++) {
         int c = 0;
         double gError = 0.0;
-        vector<unsigned int> nppl = {3, 2};
+        vector<unsigned int> nppl = {6, 4, 2};
         //NETWORK SETTING
         //INPUT, OUTPUT, NUMBER PERCEPTRON PER LAYER, ACTIVATION FUNCTION, LEARNING RATE
-        net.ini(2, 1, nppl, TYPE, LEARNINGRATE);
+        net.ini(2, 1, nppl, TYPE, LEARNINGRATERBM, MOMENTUM);
         
         //PRE TRAINING WITH RBM -> Restricted Boltzmann Machine
         if (RBMPRETRAINING) {
@@ -62,6 +64,7 @@ int main(int argc, const char * argv[]) {
         }
         
         //MLP -> Multi layer perceptron
+        net.setLearningRate(LEARNINGRATEMLP);
         do {
             inputs = {s(), s()};
             wish = {xxor(inputs)};
