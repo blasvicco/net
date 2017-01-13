@@ -7,6 +7,52 @@
 //  Copyright © 2016 Blas Eugenio Vicco. All rights reserved.
 //
 
+//FIVE EXPERIMENTS
+
+/*
+ ONE LAYER W/4 PERCEPTRONS BACK PROPAGATION
+ 
+ ----------------------------------------
+ Min error reached at iteration avg: 19530
+ Average error: 0.000% --> PERFECT, NO ERRORS!!!
+ ----------------------------------------
+
+ */
+
+/*
+ THREE LAYER 6, 4, 2 PERCEPTRONS BACK PROPAGATION
+ ----------------------------------------
+ Min error reached at iteration avg: 15020
+ Average error: 7.900%
+ ----------------------------------------
+ */
+
+/*
+ THREE LAYER 6, 4, 2 PERCEPTRONS BACK PROPAGATION INCREMENTING THE LEARNING RATE
+ ----------------------------------------
+ Min error reached at iteration avg: 10262
+ Average error: 36.134%
+ ----------------------------------------
+ */
+
+/*
+ THREE LAYER 6, 4, 2 PERCEPTRONS RBM + BACK PROPAGATION
+ ----------------------------------------
+ Min error reached at iteration avg: 7956
+ Average error: 10.124%
+ ----------------------------------------
+ */
+
+/*
+ THREE LAYER 6, 4, 2 PERCEPTRONS RBM + BACK PROPAGATION DECREMENTING THE LEARNING RATE
+ ----------------------------------------
+ Min error reached at iteration avg: 17901
+ Average error: 5.658%
+ ----------------------------------------
+ 
+ THNAKS ;)
+ */
+
 #include <iostream>
 #include <iomanip>
 #include <sstream>
