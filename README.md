@@ -38,22 +38,24 @@ void yourFunction(type someParameter) {
 
 ### XOR example
 
-Check the video: https://youtu.be/HAOM5PUad18
+Check the video: 
 
 The main.cpp file implements a complete well known XOR example.
-You will see first on the code the definition of 4 important constants.
+You will see first on the code the definition of important constants.
 
 ```c++
 const unsigned int TYPE = TANH;//SIGMOID; //TANH
 const bool RBMPRETRAINING = true; //swap from false to true to activate the pre training
-const double MINERRORACCEPTED = (TYPE == SIGMOID) ? 0.03 : 0.005;
-const double LEARNINGRATE = 0.8;
+const double MINERRORACCEPTED = (TYPE == SIGMOID) ? 0.03 : 0.003;
+const double LEARNINGRATERBM = 0.8;
+const double LEARNINGRATEMLP = 0.3;
+const double MOMENTUM = 0.2;
 ```
 
 TYPE is the activation function that we will use for the perceptron on the Net. You can chose between SIGMOID and TANH.
 RBMPRETRAINING is a boolean value that activate or deactivate the pretraining using RBM.
 MINERRORACCEPTED is a double value used to stop the training process when the Global Error reach the threshold. Remember that higher values will result in less training iterations but maybe It will no be enough to find a good solution. Smaller values will increment the number of iteration significantly.
-LEARNINGRATE is the gradient damping for the learning process. At the moment, the value apply for both, the pretraining and the backpropagation.
+LEARNINGRATERBM and LEARNINGRATEMLP are the gradient damping for the learning process and MOMENTUM rate allows the attenuation of oscillations in the gradient descent.
 
 Inside the main function we define the numEpoch, for this example we set it on 50 iterations.
 For each epoch we will:
@@ -73,26 +75,26 @@ The XOR problem doesn't need more than one hidden layer to be solved. You can te
 
 ```c++
 const bool RBMPRETRAINING = false;
-const double LEARNINGRATE = 0.3;
-vector<unsigned int> nppl = {3};
+const double LEARNINGRATEMLP = 0.3;
+vector<unsigned int> nppl = {4};
 //NETWORK SETTING
 //INPUT, OUTPUT, NUMBER PERCEPTRON PER LAYER, ACTIVATION FUNCTION, LEARNING RATE
 net.ini(2, 1, nppl, TYPE, LEARNINGRATE);
 ```
 Response example:
 ```
-----------------------------------------
-Min error reached at iteration avg: 13633
-Average error: 1.566%
-----------------------------------------
+ ----------------------------------------
+ Min error reached at iteration avg: 19530
+ Average error: 0.000% --> PERFECT, NO ERRORS!!!
+ ----------------------------------------
 ```
 
-But in order to test the RBM we will add an extra hidden layer to the Net. You can see that if we add this extra layer, increment the learning rate to 0.8 and we do not activate the pre training, the response of the Net to solve the XOR problem is not good at all.
+But in order to test the RBM we will add extra hidden layers to the Net. You can see that if we add these extra layers and we do not activate the pre training, the response of the Net to solve the XOR problem is not good.
 
 ```c++
 const bool RBMPRETRAINING = false;
-const double LEARNINGRATE = 0.8;
-vector<unsigned int> nppl = {4, 3};
+const double LEARNINGRATEMLP = 0.3;
+vector<unsigned int> nppl = {6, 4, 2};
 //NETWORK SETTING
 //INPUT, OUTPUT, NUMBER PERCEPTRON PER LAYER, ACTIVATION FUNCTION, LEARNING RATE
 net.ini(2, 1, nppl, TYPE, LEARNINGRATE);
@@ -100,18 +102,38 @@ net.ini(2, 1, nppl, TYPE, LEARNINGRATE);
 
 Response example without pre training:
 ```
-----------------------------------------
-Min error reached at iteration avg: 7689
-Average error: 29.176%
-----------------------------------------
+ ----------------------------------------
+ Min error reached at iteration avg: 15020
+ Average error: 7.900%
+ ----------------------------------------
 ```
+
+Incrementing the learning rate doesn't help.
 
 Versus:
 
 ```c++
+const double LEARNINGRATEMLP = 0.8;
+vector<unsigned int> nppl = {6, 4, 2};
+//NETWORK SETTING
+//INPUT, OUTPUT, NUMBER PERCEPTRON PER LAYER, ACTIVATION FUNCTION, LEARNING RATE
+net.ini(2, 1, nppl, TYPE, LEARNINGRATE);
+```
+
+Response example without pre training and incrementing the learning rate:
+```
+ ----------------------------------------
+ Min error reached at iteration avg: 10262
+ Average error: 36.134%
+ ----------------------------------------
+```
+
+If we activate the RBM:
+```c++
 const bool RBMPRETRAINING = true;
-const double LEARNINGRATE = 0.8;
-vector<unsigned int> nppl = {4, 3};
+const double LEARNINGRATERBM = 0.8;
+const double LEARNINGRATEMLP = 0.8;
+vector<unsigned int> nppl = {6, 4, 2};
 //NETWORK SETTING
 //INPUT, OUTPUT, NUMBER PERCEPTRON PER LAYER, ACTIVATION FUNCTION, LEARNING RATE
 net.ini(2, 1, nppl, TYPE, LEARNINGRATE);
@@ -119,11 +141,35 @@ net.ini(2, 1, nppl, TYPE, LEARNINGRATE);
 
 Response example with pre training:
 ```
-----------------------------------------
-Min error reached at iteration avg: 5494
-Average error: 10.988%
-----------------------------------------
+ ----------------------------------------
+ Min error reached at iteration avg: 7956
+ Average error: 10.124%
+ ----------------------------------------
+ ```
+ 
+ And if we refine the tunning decrementing the learning rate for the MLP again to 0.3:
+ ```c++
+const bool RBMPRETRAINING = true;
+const double LEARNINGRATERBM = 0.8;
+const double LEARNINGRATEMLP = 0.3;
+vector<unsigned int> nppl = {6, 4, 2};
+//NETWORK SETTING
+//INPUT, OUTPUT, NUMBER PERCEPTRON PER LAYER, ACTIVATION FUNCTION, LEARNING RATE
+net.ini(2, 1, nppl, TYPE, LEARNINGRATE);
 ```
+
+Response example:
+```
+ ----------------------------------------
+ Min error reached at iteration avg: 17901
+ Average error: 5.658%
+ ----------------------------------------
+ ```
+ 
+This response is even better than the same configuration without pre training.
+We saw in these experiment the problem of back propagate the error between hidden layers. More hidden layers we add more vanishing gradient problem we have.
+So, in order to sort this issue we add the pre training with the RBM.
+
 
 As you can see in the code, the pre training is a loop of 1000 samples. Also, we are applying the RBM just to the first hidden layer and we are setting just one Gibbs steps. Please feel free to play with this parameters.
 
