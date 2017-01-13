@@ -78,7 +78,7 @@ int main(int argc, const char * argv[]) {
             //cout << " Error: " << gError << endl; //this should be less each iteration
             net.backFix(error);
             c++;
-        } while ((c < 20000) && (gError > MINERRORACCEPTED));
+        } while (((c < 20000) && (gError > MINERRORACCEPTED)) || c < 2000);
         cout << endl;
         cout << "||||||||||||||||||||||||||||||||||||||||||" << endl;
         if (c < 20000) {
