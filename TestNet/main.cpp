@@ -6,6 +6,7 @@
 //  Created by Blas Eugenio Vicco on 11/29/16.
 //  Copyright © 2016 Blas Eugenio Vicco. All rights reserved.
 //
+
 #include <iostream>
 #include <iomanip>
 #include <sstream>
@@ -41,12 +42,12 @@ int main(int argc, const char * argv[]) {
     for (int t = 0; t < numEpoch; t++) {
         int c = 0;
         double gError = 0.0;
-        vector<unsigned int> nppl = {4, 3};
+        vector<unsigned int> nppl = {3, 2};
         //NETWORK SETTING
-        //INPUT, OUTPUT, NUMBER PERPECTRON PER LAYER, ACTIVATION FUNCTION, LEARNING RATE
+        //INPUT, OUTPUT, NUMBER PERCEPTRON PER LAYER, ACTIVATION FUNCTION, LEARNING RATE
         net.ini(2, 1, nppl, TYPE, LEARNINGRATE);
         
-        //PRE TRAINING WITH RBM -> Restricted Boltzman Machine
+        //PRE TRAINING WITH RBM -> Restricted Boltzmann Machine
         if (RBMPRETRAINING) {
             //pre train with 1000 samples
             for (unsigned int i = 0; i < 1000; i++) {
