@@ -38,7 +38,7 @@ void yourFunction(type someParameter) {
 
 ### XOR example
 
-Check the video: 
+Check the video: https://youtu.be/psMW2K3iJ_s
 
 The main.cpp file implements a complete well known XOR example.
 You will see first on the code the definition of important constants.
@@ -52,9 +52,12 @@ const double LEARNINGRATEMLP = 0.3;
 const double MOMENTUM = 0.2;
 ```
 
-TYPE is the activation function that we will use for the perceptron on the Net. You can chose between SIGMOID and TANH.
+TYPE is the activation function that we will use for each perceptron in the Net. You can chose between SIGMOID and TANH.
+
 RBMPRETRAINING is a boolean value that activate or deactivate the pretraining using RBM.
+
 MINERRORACCEPTED is a double value used to stop the training process when the Global Error reach the threshold. Remember that higher values will result in less training iterations but maybe It will no be enough to find a good solution. Smaller values will increment the number of iteration significantly.
+
 LEARNINGRATERBM and LEARNINGRATEMLP are the gradient damping for the learning process and MOMENTUM rate allows the attenuation of oscillations in the gradient descent.
 
 Inside the main function we define the numEpoch, for this example we set it on 50 iterations.
@@ -64,12 +67,9 @@ For each epoch we will:
 * Training
 * Test
 
-By default we will print in each epoch, the number of iteration needed for the Net to get trained and the total of fails in the test phase.
-At the end of the epochs iteration we will print the average of iteration and the average of percentual errors.
-In this way we will have a better approach of the Network configuration response.
+By default we will print for each epoch, the number of iteration needed by the Net to get trained and the total of fails in the test phase. At the end of all epochs, we will print the average of iteration and the average of porcentual errors to have a better approach of the Network configuration response.
 
-For the XOR problem we will have two inputs and one output. These values will be different depending of the activation function we chose for the Net.
-For SIGMOID inputs and output will be 0 or 1 and for TANH the range will be -1, 1.
+For the XOR problem we will have two inputs and one output. These values will be different depending of the activation function we chose for the Net. For SIGMOID inputs and output will be 0 or 1 and for TANH the range will be -1, 1.
 
 The XOR problem doesn't need more than one hidden layer to be solved. You can test it deactivating the pre training and setting the network as:
 
@@ -79,17 +79,19 @@ const double LEARNINGRATEMLP = 0.3;
 vector<unsigned int> nppl = {4};
 //NETWORK SETTING
 //INPUT, OUTPUT, NUMBER PERCEPTRON PER LAYER, ACTIVATION FUNCTION, LEARNING RATE
-net.ini(2, 1, nppl, TYPE, LEARNINGRATE);
+net.ini(2, 1, nppl, TYPE, LEARNINGRATERBM, MOMENTUM);
+net.setLearningRate(LEARNINGRATEMLP);
 ```
+
 Response example:
 ```
  ----------------------------------------
- Min error reached at iteration avg: 19530
- Average error: 0.000% --> PERFECT, NO ERRORS!!!
+ Min error reached at iteration avg: 19409
+ Average error: 0.000% --> Perfect Response
  ----------------------------------------
 ```
 
-But in order to test the RBM we will add extra hidden layers to the Net. You can see that if we add these extra layers and we do not activate the pre training, the response of the Net to solve the XOR problem is not good.
+But in order to test the RBM we will add extra hidden layers to the Net. You can see that if we add these extra layers and we do not activate the pre training, the response of the Net to solve the XOR problem is not good:
 
 ```c++
 const bool RBMPRETRAINING = false;
@@ -97,34 +99,35 @@ const double LEARNINGRATEMLP = 0.3;
 vector<unsigned int> nppl = {6, 4, 2};
 //NETWORK SETTING
 //INPUT, OUTPUT, NUMBER PERCEPTRON PER LAYER, ACTIVATION FUNCTION, LEARNING RATE
-net.ini(2, 1, nppl, TYPE, LEARNINGRATE);
+net.ini(2, 1, nppl, TYPE, LEARNINGRATERBM, MOMENTUM);
+net.setLearningRate(LEARNINGRATEMLP);
 ```
 
-Response example without pre training:
+Response example adding more than one hidden layer and without pre training:
 ```
  ----------------------------------------
- Min error reached at iteration avg: 15020
- Average error: 7.900%
+ Min error reached at iteration avg: 13660
+ Average error: 10.098%
  ----------------------------------------
 ```
 
-Incrementing the learning rate doesn't help.
-
-Versus:
+Incrementing the learning rate doesn't help:
 
 ```c++
+const bool RBMPRETRAINING = false;
 const double LEARNINGRATEMLP = 0.8;
 vector<unsigned int> nppl = {6, 4, 2};
 //NETWORK SETTING
 //INPUT, OUTPUT, NUMBER PERCEPTRON PER LAYER, ACTIVATION FUNCTION, LEARNING RATE
-net.ini(2, 1, nppl, TYPE, LEARNINGRATE);
+net.ini(2, 1, nppl, TYPE, LEARNINGRATERBM, MOMENTUM);
+net.setLearningRate(LEARNINGRATEMLP);
 ```
 
 Response example without pre training and incrementing the learning rate:
 ```
  ----------------------------------------
- Min error reached at iteration avg: 10262
- Average error: 36.134%
+ Min error reached at iteration avg: 12332
+ Average error: 44.976%
  ----------------------------------------
 ```
 
@@ -136,18 +139,19 @@ const double LEARNINGRATEMLP = 0.8;
 vector<unsigned int> nppl = {6, 4, 2};
 //NETWORK SETTING
 //INPUT, OUTPUT, NUMBER PERCEPTRON PER LAYER, ACTIVATION FUNCTION, LEARNING RATE
-net.ini(2, 1, nppl, TYPE, LEARNINGRATE);
+net.ini(2, 1, nppl, TYPE, LEARNINGRATERBM, MOMENTUM);
+net.setLearningRate(LEARNINGRATEMLP);
 ```
 
 Response example with pre training:
 ```
  ----------------------------------------
- Min error reached at iteration avg: 7956
- Average error: 10.124%
+ Min error reached at iteration avg: 8325
+ Average error: 4.874%
  ----------------------------------------
  ```
  
- And if we refine the tunning decrementing the learning rate for the MLP again to 0.3:
+ And if we refine the tuning decrementing the learning rate for the MLP again to 0.3:
  ```c++
 const bool RBMPRETRAINING = true;
 const double LEARNINGRATERBM = 0.8;
@@ -155,19 +159,20 @@ const double LEARNINGRATEMLP = 0.3;
 vector<unsigned int> nppl = {6, 4, 2};
 //NETWORK SETTING
 //INPUT, OUTPUT, NUMBER PERCEPTRON PER LAYER, ACTIVATION FUNCTION, LEARNING RATE
-net.ini(2, 1, nppl, TYPE, LEARNINGRATE);
+net.ini(2, 1, nppl, TYPE, LEARNINGRATERBM, MOMENTUM);
+net.setLearningRate(LEARNINGRATEMLP);
 ```
 
 Response example:
 ```
  ----------------------------------------
- Min error reached at iteration avg: 17901
- Average error: 5.658%
+ Min error reached at iteration avg: 17517
+ Average error: 0.958%
  ----------------------------------------
  ```
  
-This response is even better than the same configuration without pre training.
-We saw in these experiment the problem of back propagate the error between hidden layers. More hidden layers we add more vanishing gradient problem we have.
+The last response is even better than the same configuration without pre training.
+We saw in these experiments the problem of back propagating the error between hidden layers. More hidden layers we add more vanishing gradient problem we have.
 So, in order to sort this issue we add the pre training with the RBM.
 
 
@@ -189,11 +194,9 @@ if (RBMPRETRAINING) {
 }
 ```
 
-After the pre training we perform the well know MLP training or back-propagation. The loop here has two conditions, a hardcoded limit in 20000 iterations or the gError (global error) being minor than the threshold.
-The hardcoded limit is a safe infinite loop breaker for Net configurations that doesn't converge or doesn't reach the threshold.
-The (gError > MINERRORACCEPTED) condition is not the best to end the training loop. It could happen that the MINERRORACCEPTED is reached with no enough training iterations, resulting in a bad Net configuration. Please, feel free to implement a better approach.
+After the pre training we perform the well know MLP training or back-propagation. The loop here has two conditions, a hardcoded limit in 20000 iterations or the gError (global error) being minor than the threshold. The hardcoded limit is a safe infinite loop breaker for Net configurations that doesn't converge or doesn't reach the threshold. The (gError > MINERRORACCEPTED) condition is not the best to end the training loop. It could happen that the MINERRORACCEPTED is reached with no enough training iterations, resulting in a bad Net configuration. Please, feel free to implement a better approach.
 
-In order to test the Net I decided to calculate the error as wish - round(output). Where round(output) will give us the logic response on/off. I also set the test loop to 1000 but you can change it easily defined the var ctest.
+In order to test the Net, I decided to calculate the error as wish - round(output). Where round(output) will give us the logic response on/off. I also set the test loop to 1000 but you can change it easily defined the var ctest.
 
 ```c++
 unsigned int cwrong = 0;
