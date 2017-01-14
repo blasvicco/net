@@ -41,7 +41,7 @@ void yourFunction(type someParameter) {
 Check the video: https://youtu.be/psMW2K3iJ_s
 
 The main.cpp file implements a complete well known XOR example.
-You will see first on the code the definition of important constants.
+You will see first in the code the definition of important constants.
 
 ```c++
 const unsigned int TYPE = TANH;//SIGMOID; //TANH
@@ -52,24 +52,23 @@ const double LEARNINGRATEMLP = 0.3;
 const double MOMENTUM = 0.2;
 ```
 
-TYPE is the activation function that we will use for each perceptron in the Net. You can chose between SIGMOID and TANH.
+TYPE is the activation function that we will use for each perceptron in the Net. You can choose between SIGMOID and TANH.
 
-RBMPRETRAINING is a boolean value that activate or deactivate the pretraining using RBM.
+RBMPRETRAINING is a boolean value that activates or deactivates the pre training using RBM.
 
-MINERRORACCEPTED is a double value used to stop the training process when the Global Error reach the threshold. Remember that higher values will result in less training iterations but maybe It will no be enough to find a good solution. Smaller values will increment the number of iteration significantly.
+MINERRORACCEPTED is a double value used to stop the training process when the Global Error reaches the threshold. Remember that higher values will result in less training iterations but maybe it will not be enough to find a good solution. Smaller values will increment the number of iteration significantly.
 
 LEARNINGRATERBM and LEARNINGRATEMLP are the gradient damping for the learning process and MOMENTUM rate allows the attenuation of oscillations in the gradient descent.
 
-Inside the main function we define the numEpoch, for this example we set it on 50 iterations.
-For each epoch we will:
-* Initialize a network
-* Pre training
-* Training
-* Test
+Inside the main function we define the numEpoch. For these experiments we set it on 50 iterations. For each epoch we will:
 
-By default we will print for each epoch, the number of iteration needed by the Net to get trained and the total of fails in the test phase. At the end of all epochs, we will print the average of iteration and the average of porcentual errors to have a better approach of the Network configuration response.
+Initialize a network
+Pre train
+Train
+Test
+By default we will print for each epoch, the number of iterations needed by the Net to get trained and the total number of fails in the test phase. At the end of all epochs, we will print the average of iteration and the average of porcentual errors to have a better approach to the Network configuration response.
 
-For the XOR problem we will have two inputs and one output. These values will be different depending of the activation function we chose for the Net. For SIGMOID inputs and output will be 0 or 1 and for TANH the range will be -1, 1.
+For the XOR problem we will have two inputs and one output. These values will be different depending of the activation function we chose for the Net. For SIGMOID the inputs and the output will be 0 or 1 and for TANH the range will be -1, 1.
 
 The XOR problem doesn't need more than one hidden layer to be solved. You can test it deactivating the pre training and setting the network as:
 
@@ -91,7 +90,7 @@ Response example:
  ----------------------------------------
 ```
 
-But in order to test the RBM we will add extra hidden layers to the Net. You can see that if we add these extra layers and we do not activate the pre training, the response of the Net to solve the XOR problem is not good:
+But in order to test the RBM we will add extra hidden layers to the Net. You can see that if we add these extra layers and we do not activate the pre training, the response from the Net to solve the XOR problem is not good.
 
 ```c++
 const bool RBMPRETRAINING = false;
@@ -151,7 +150,7 @@ Response example with pre training:
  ----------------------------------------
  ```
  
- And if we refine the tuning decrementing the learning rate for the MLP again to 0.3:
+And if we refine the tuning decreasing the learning rate for the MLP again to 0.3:
  ```c++
 const bool RBMPRETRAINING = true;
 const double LEARNINGRATERBM = 0.8;
@@ -172,8 +171,7 @@ Response example:
  ```
  
 The last response is even better than the same configuration without pre training.
-We saw in these experiments the problem of back propagating the error between hidden layers. More hidden layers we add more vanishing gradient problem we have.
-So, in order to sort this issue we add the pre training with the RBM.
+We saw in these experiments the problem of back propagating the error between hidden layers. The more hidden layers we add, the greater the vanishing gradient problem we have. So, in order to sort this issue we add the pre training with the RBM.
 
 
 As you can see in the code, the pre training is a loop of 1000 samples. Also, we are applying the RBM just to the first hidden layer and we are setting just one Gibbs steps. Please feel free to play with this parameters.
