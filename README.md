@@ -11,7 +11,7 @@ Be sure that all the file are included in your project.
 In the code where you want to use it just include the Net header file.
 
 ```c++
-#include “net.h”
+#include "net.h"
 #include "activation.h"
 ```
 
